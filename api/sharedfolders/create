@@ -25,6 +25,7 @@ use JSON;
 use esmith::AccountsDB;
 use esmith::event;
 use NethServer::ApiTools;
+use Encode qw(decode encode);
 
 require '/usr/libexec/nethserver/api/nethserver-samba/lib/samba_functions.pl';
 
@@ -34,6 +35,7 @@ my $db = esmith::AccountsDB->open() || die("Could not open AccountsDB");
 my $input = NethServer::ApiTools::readInput();
 my $item = $input->{'item'};
 my $ibayName = $input->{'item'}->{'name'} || NethServer::ApiTools::error();
+$ibayName =  encode('UTF-8', $ibayName);
 
 my $eventName = 'ibay-create';
 $db->new_record($ibayName, {'type' => 'ibay', item2props($item)});
@@ -58,7 +60,3 @@ if(esmith::event::event_signal($eventName, @eventArgs)) {
 
 print encode_json($ret);
 exit($exitCode);
-
-
-
-

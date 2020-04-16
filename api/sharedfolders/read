@@ -27,6 +27,7 @@ use esmith::AccountsDB;
 use NethServer::ApiTools;
 use NethServer::SSSD;
 use Sys::Hostname;
+use Encode qw(decode encode);
 
 require '/usr/libexec/nethserver/api/nethserver-samba/lib/samba_functions.pl';
 
@@ -59,7 +60,7 @@ sub mainList
     foreach my $record ($adb->get_all_by_prop('type' => 'ibay')) {
         my %props = $record->props();
         delete $props{'type'};
-        $props{'name'} = $record->key();
+        $props{'name'} = decode ('UTF-8',$record->key());
 
         my %acls = ();
 
